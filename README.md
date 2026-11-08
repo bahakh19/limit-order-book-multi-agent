@@ -100,11 +100,11 @@ $$
 R(\ell)=\langle \varepsilon_t\,(m_{t+\ell}-m_t)\rangle
 $$
 
-PnL decomposition of an agent summed over his fills of quantity $q$ at price $p$ with $s = +1$ when he bought $m^{-}$ the mid-price before the fill and $h = 100$ events:
+PnL decomposition of an agent, summed over his fills of quantity $q$ at price $p$, with $s=+1$ when he bought, $m^{-}$ the mid-price before the fill and $h=100$ events:
 
-$$
-\text{PnL} = \sum_{s,q}\,(m^{-}-p) + \sum s\,q\,\big(m(t+h)-m^{-}\big) + \sum s\,q\,\big(m_{end}-m(t+h)\big) + n_0\,(m_{end}-m_{start})
-$$
+```math
+\text{PnL}=\sum_{\text{fills}} s\,q\,(m^{-}-p)\;+\;\sum_{\text{fills}} s\,q\,\bigl(m(t+h)-m^{-}\bigr)\;+\;\sum_{\text{fills}} s\,q\,\bigl(m_{\text{end}}-m(t+h)\bigr)\;+\;n_0\,(m_{\text{end}}-m_{\text{start}})
+```
 
 The four terms are the spread earned the adverse selection the inventory and the initial shares $n_0$ held through the run.
 
