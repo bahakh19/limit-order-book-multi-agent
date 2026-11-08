@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.ipynb_checkpoints/
+.venv/
+venv/
+.DS_Store
+# the licensed PDF of the reference book must never be committed
+*.pdf
