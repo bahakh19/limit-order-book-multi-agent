@@ -103,7 +103,7 @@ $$
 PnL decomposition of an agent summed over his fills of quantity $q$ at price $p$ with $s = +1$ when he bought $m^{-}$ the mid-price before the fill and $h = 100$ events:
 
 $$
-\text{PnL} = \sum_s\,q\,(m^{-}-p) + \sum s\,q\,\big(m(t+h)-m^{-}\big) + \sum s\,q\,\big(m_{end}-m(t+h)\big) + n_0\,(m_{end}-m_{start})
+\text{PnL} = \sum_s,q\,(m^{-}-p) + \sum s\,q\,\big(m(t+h)-m^{-}\big) + \sum s\,q\,\big(m_{end}-m(t+h)\big) + n_0\,(m_{end}-m_{start})
 $$
 
 The four terms are the spread earned the adverse selection the inventory and the initial shares $n_0$ held through the run.
