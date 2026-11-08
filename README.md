@@ -1,6 +1,6 @@
 # Limit order book and multi-agent market simulation
 
-A limit order book exchange built from scratch in Python, a population of interacting trading agents, and the measurements of *Trades, Quotes and Prices* (Bouchaud, Bonart, Donier, Gould, Cambridge University Press, 2018) applied to the simulated market.
+A limit order book exchange built from scratch in Python with a population of interacting trading agents and the measurements of the book *Trades, Quotes and Prices* (Bouchaud, Bonart, Donier, Gould, Cambridge University Press, 2018) applied to the simulated market.
 
 Two questions drive the study:
 
@@ -11,12 +11,12 @@ The answers come from comparing two markets built on the same engine. The **base
 
 ## Key findings
 
-1. **Each stylized fact needs its own ingredient.** Zero-intelligence liquidity alone gives a realistic spread (1.8 ticks) and fat tails (excess kurtosis 7.2). Only the splitting of metaorders makes the order signs persistent (C(1) = 0.06, still 0.03 at lag 50). Only with an informed trader and a market maker on top does the response function grow with the lag, as in real markets (R(20) is twice R(1)). The baseline market reproduces none of these.
-2. **The market maker keeps 13% of the spread he earns.** He earns 1.48 ticks per share against the mid-price, gives back 1.05 to adverse selection and 0.23 to inventory, and keeps 0.20. His markouts show who is toxic: fills against the informed trader lose 3.2 ticks per share after 400 events, while fills against uninformed flow stay profitable.
-3. **The optimal spread widens with informed flow.** The market maker's best half-spread is 1 tick without an informed trader and 2 ticks with one. With three times more informed flow he barely breaks even at any spread and loses heavily when quoting tight (Glosten-Milgrom, chapter 16).
-4. **Information enters the price slowly.** After news, only the informed trader trades in its direction, and the mispricing falls from 16 to 5 ticks over 1,500 events while the market maker is pushed against the news.
-5. **Aggressive strategies lose in every market, but how much depends on liquidity.** The strategies that sweep several price levels lose with high significance in both markets: `Trader_bullish` and `Trader_bearish` lose about 110 basis points of wealth in the ecology. Execution costs are a hundred times smaller in the ecology (1 to 6 basis points against 105 to 662), because the baseline book is extremely illiquid.
-6. **The square-root law of impact is a property of liquidity.** With zero-intelligence liquidity, the impact of a metaorder is linear in its size and permanent. With latent liquidity whose depth grows with the distance to a slow consensus price, impact is linear for small metaorders, then follows a square root (exponent 0.44) and is mostly transient. This is the crossover of Eq. 18.19 and 18.20 of the book.
+1. **Each stylized fact needs its own ingredient:** Zero-intelligence liquidity alone gives a realistic spread (1.8 ticks) and fat tails (excess kurtosis 7.2). Only the splitting of metaorders makes the order signs persistent (C(1) = 0.06, still 0.03 at lag 50). Only with an informed trader and a market maker on top does the response function grow with the lag as in real markets (R(20) is twice R(1)). The baseline market reproduces none of these.
+2. **The market maker keeps 13% of the spread he earns:** He earns 1.48 ticks per share against the mid-price gives back 1.05 to adverse selection and 0.23 to inventory and keeps 0.20. His markouts show who is toxic: fills against the informed trader lose 3.2 ticks per share after 400 events while fills against uninformed flow stay profitable.
+3. **The optimal spread widens with informed flow:** The market maker's best half-spread is 1 tick without an informed trader and 2 ticks with one. With three times more informed flow he barely breaks even at any spread and loses heavily when quoting tight (Glosten-Milgrom, chapter 16).
+4. **Information enters the price slowly:** After news only the informed trader trades in its direction and the mispricing falls from 16 to 5 ticks over 1 500 events while the market maker is pushed against the news.
+5. **Aggressive strategies lose in every market but how much depends on liquidity:** The strategies that sweep several price levels lose with high significance in both markets `Trader_bullish` and `Trader_bearish` lose about 110 basis points of wealth in the ecology. Execution costs are a hundred times smaller in the ecology (1 to 6 basis points against 105 to 662) because the baseline book is extremely illiquid.
+6. **The square-root law of impact is a property of liquidity:** With zero-intelligence liquidity the impact of a metaorder is linear in its size and permanent. With latent liquidity whose depth grows with the distance to a slow consensus price impact is linear for small metaorders then follows a square root (exponent 0.44) and is mostly transient.
 
 ![Stylized facts](docs/figures/stylized_facts.png)
 
@@ -26,7 +26,7 @@ The answers come from comparing two markets built on the same engine. The **base
 
 ![Flows and markouts](docs/figures/flows_markouts.png)
 
-The PnL of every agent is split exactly into the spread earned or paid against the mid-price, the price move in the 100 events after each fill, and the holding of the position until the end:
+The PnL of every agent is split exactly into the spread earned or paid against the mid-price, the price move in the 100 events after each fill and the holding of the position until the end:
 
 ![PnL decomposition](docs/figures/pnl_decomposition.png)
 
@@ -57,12 +57,12 @@ Average over 20 runs of the ecology. The three parts add up to each agent's mark
 
 | Strategy | Idea |
 |---|---|
-| `Trader_quantity` | buys at the best ask when his capital buys fewer shares than the best ask displays, sells at the best bid when it is above his purchase price |
-| `Trader_Buy_and_sell` | buys the whole best ask queue, sells everything once the best bid is above his purchase price |
+| `Trader_quantity` | buys at the best ask when his capital buys fewer shares than the best ask displays sells at the best bid when it is above his purchase price |
+| `Trader_Buy_and_sell` | buys the whole best ask queue sells everything once the best bid is above his purchase price |
 | `Trader_random` | coin flip: market buy with all his cash or market sell of his shares |
-| `Trader_bullish` | market buy with all his cash, then limit sell at the worst bid |
-| `Trader_bearish` | market sell of his shares, then limit buy at the worst ask, then limit sell at the worst bid |
-| `Trader_MA` | buys when the last trade price is above its moving average, sells when it is below |
+| `Trader_bullish` | market buy with all his cash then limit sell at the worst bid |
+| `Trader_bearish` | market sell of his shares then limit buy at the worst ask then limit sell at the worst bid |
+| `Trader_MA` | buys when the last trade price is above its moving average sells when it is below |
 
 The baseline market on its own (spread, depth, order flow, impact) and the cost of each strategy in it:
 
@@ -72,43 +72,43 @@ The baseline market on its own (spread, depth, order flow, impact) and the cost 
 
 ## The market ecology
 
-| Agent | Behaviour | Book |
-|---|---|---|
-| `Trader_noise_maker` | zero-intelligence limit orders 1 to 20 ticks from the opposite best quote, cancelled at a constant rate | chapter 8 |
-| `Trader_noise_taker` | zero-intelligence market orders | chapter 8 |
-| `Trader_market_maker` | quotes around a reservation price skewed by his inventory, cancels and requotes | chapters 16 and 17 |
-| `Trader_informed` | trades towards a fundamental value with news jumps that only he sees | chapters 15 and 16 |
-| `Trader_metaorder` | Pareto-distributed metaorders split into child market orders | chapters 10.5 and 12 |
-| `Trader_latent_liquidity` | orders around a slow consensus price, depth growing linearly with the distance | chapters 18 and 19 |
+| Agent | Behaviour | 
+|---|---|
+| `Trader_noise_maker` | zero-intelligence limit orders 1 to 20 ticks from the opposite best quote cancelled at a constant rate | 
+| `Trader_noise_taker` | zero-intelligence market orders | 
+| `Trader_market_maker` | quotes around a reservation price skewed by his inventory cancels and requotes | 
+| `Trader_informed` | trades towards a fundamental value with news jumps that only he sees | 
+| `Trader_metaorder` | Pareto-distributed metaorders split into child market orders | 
+| `Trader_latent_liquidity` | orders around a slow consensus price, depth growing linearly with the distance | 
 | six directional strategies | see the table above | |
 
-An `Exchange` gives every agent a unique id and tells both counterparties of every trade about their fill, so passive liquidity providers have a real PnL. Every event draws the same random numbers whatever happens, so the impact of a metaorder is measured by running the market twice with the same seed, with and without it (common random numbers). The full model is described in [docs/METHODOLOGY.md](docs/METHODOLOGY.md).
+An `Exchange` gives every agent a unique id and tells both counterparties of every trade about their fill so passive liquidity providers have a real PnL. Every event draws the same random numbers whatever happens so the impact of a metaorder is measured by running the market twice with the same seed with and without it (common random numbers). The full model is described in [docs/METHODOLOGY.md](docs/METHODOLOGY.md).
 
 ## Measurements
 
 The sign $\varepsilon_t$ of an aggressive order is $+1$ for a buy and $-1$ for a sell, $m_t$ is the mid-price just before the $t$-th aggressive order, and time is counted in aggressive orders.
 
-Autocorrelation of the order signs (chapter 10):
+Autocorrelation of the order signs:
 
 $$
 C(\ell)=\langle \varepsilon_t\,\varepsilon_{t+\ell}\rangle-\langle \varepsilon\rangle^{2}
 $$
 
-Response function (chapter 11, Eq. 11.5 for $\ell = 1$):
+Response function (for $\ell = 1$):
 
 $$
 R(\ell)=\langle \varepsilon_t\,(m_{t+\ell}-m_t)\rangle
 $$
 
-PnL decomposition of an agent, summed over his fills of quantity $q$ at price $p$, with $s = +1$ when he bought, $m^{-}$ the mid-price before the fill and $h = 100$ events:
+PnL decomposition of an agent summed over his fills of quantity $q$ at price $p$ with $s = +1$ when he bought $m^{-}$ the mid-price before the fill and $h = 100$ events:
 
 $$
 \text{PnL} = \sum s\,q\,(m^{-}-p) + \sum s\,q\,\big(m(t+h)-m^{-}\big) + \sum s\,q\,\big(m_{end}-m(t+h)\big) + n_0\,(m_{end}-m_{start})
 $$
 
-The four terms are the spread earned, the adverse selection, the inventory, and the initial shares $n_0$ held through the run.
+The four terms are the spread earned the adverse selection the inventory and the initial shares $n_0$ held through the run.
 
-Static book experiment: a market order of size $Q$ walking through a static book moves the best price by $I(Q)$, the inverse of the cumulative volume. A flat depth profile gives $I(Q)\propto Q$, a depth growing linearly with the distance gives $I(Q)\propto\sqrt{Q}$.
+Static book experiment: a market order of size $Q$ walking through a static book moves the best price by $I(Q)$ the inverse of the cumulative volume. A flat depth profile gives $I(Q)\propto Q$, a depth growing linearly with the distance gives $I(Q)\propto\sqrt{Q}$.
 
 ![Static book impact](docs/figures/square_root.png)
 
@@ -152,11 +152,11 @@ print(pnl_decomposition(run).groupby("kind")[["spread", "adverse", "inventory", 
 
 ## Reproducibility
 
-Every random generator is seeded. The notebook gives identical outputs when run twice, and identical printed numbers on Python 3.11, 3.12 and 3.13 with both old (numpy 1.26, pandas 2.1, matplotlib 3.8) and recent (numpy 2.4, pandas 3.1, matplotlib 3.11) libraries. The CI runs the fast tests on the three Python versions and executes the notebook.
+Every random generator is seeded. The notebook gives identical outputs when run twice and identical printed numbers on Python 3.11, 3.12 and 3.13 with both old (numpy 1.26, pandas 2.1, matplotlib 3.8) and recent (numpy 2.4, pandas 3.1, matplotlib 3.11) libraries. The CI runs the fast tests on the three Python versions and executes the notebook.
 
 ## Limits
 
-The markets are small (20,000 events per run) and their parameters are set by hand to give a realistic spread and price discovery, not calibrated to data. Agents have no latency, the informed trader sees the fundamental exactly, and the baseline market depends on fixed reaction orders. The results are about mechanisms, measured with the definitions of the book, not about exact values.
+The markets are small (20 000 events per run) and their parameters are set by hand to give a realistic spread and price discovery not calibrated to data. Agents have no latency the informed trader sees the fundamental exactly and the baseline market depends on fixed reaction orders. The results are about mechanisms measured with the definitions of the book not about exact values.
 
 ## Credits
 
